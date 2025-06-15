@@ -11,6 +11,10 @@ Tank shooting game with terrain destruction.
 v0.1 - Project initialization
 
 ### Last changes:
+v0.1.1 - 15.05.2025
+
+* Added base scenes.
+
 v0.1.0 - 14.05.2025
 
 * Project initialization;
