@@ -8,9 +8,14 @@ Tank shooting game with terrain destruction.
 ## About
 
 ### Current stage:
-v0.1 - Project initialization
+v0.2 - Map stage I
 
 ### Last changes:
+v0.2.0 - 19.06.2025
+
+* Added first iteration of map drawing engine;
+* Added minimap.
+
 v0.1.1 - 15.05.2025
 
 * Added base scenes.

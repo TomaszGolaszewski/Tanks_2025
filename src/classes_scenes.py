@@ -1,9 +1,10 @@
+import os
 import pygame
 
 from settings import *
 from game_engine.scenes import *
 from game_engine.scenes_features import *
-# from classes_map import *
+from classes_map import *
 # from classes_trains import *
 from classes_scenes_game import *
 
@@ -54,7 +55,7 @@ class TitleScene(SceneBase):
                         if button.option == "exit":
                             self.terminate()
                         else:
-                            self.switch_scene(LoadingScene({"game_mode": button.option}))
+                            self.switch_scene(BrowseMapsScene({"game_mode": button.option}))
                   
     def update(self):
         """Game logic for the scene."""
@@ -93,7 +94,14 @@ class LoadingScene(SceneBase):
         SceneBase.__init__(self, kw)
         self.loading_text = FixText((WIN_WIDTH/2, WIN_HEIGHT/2), "Loading ...", 30)
         self.ticks = 0
-        
+
+    # def process_input(self, events, keys_pressed):
+    #     """
+    #     Receive all the events that happened since the last frame.
+    #     Handle all received events.
+    #     """
+    #     pass
+
     def update(self):
         """Game logic for the scene."""
         self.ticks += 1
@@ -112,7 +120,37 @@ class LoadingScene(SceneBase):
 # ======================================================================
 
 
+class BrowseMapsScene(SceneBase):
+    def __init__(self, kw):
+        """Initialization of the scene."""
+        SceneBase.__init__(self, kw)
+        self.map = Map(os.path.join("maps", "Testowa_v21.txt"))
+        # self.loading_text = FixText((WIN_WIDTH/2, WIN_HEIGHT/2), "Loading ...", 30)
+        # self.ticks = 0
 
+    def process_input(self, events, keys_pressed):
+        """
+        Receive all the events that happened since the last frame.
+        Handle all received events.
+        """
+        pass
+        
+    def update(self):
+        """Game logic for the scene."""
+        pass
+        # self.ticks += 1
+        # # automatically jump to the GameScene after the first cycle
+        # if self.ticks > 1:
+        #     self.switch_scene(GameScene(self.kw))
+    
+    def render(self, win):
+        """Draw scene on the screen."""
+        pass
+        # clear screen
+        win.fill(BLACK)
+        # draw
+        self.map.draw(win)
+        self.map.draw_preview(win)
 
 
 # ======================================================================

@@ -18,15 +18,15 @@ class SceneBase:
         Receive all the events that happened since the last frame.
         Handle all received events.
         """
-        print("not overwritten process_input")
+        raise NotImplementedError("Not overwritten process_input method!")
 
     def update(self):
         """Game logic for the scene."""
-        print("not overwritten update")
+        raise NotImplementedError("Not overwritten update method!")
 
     def render(self, win):
         """Draw scene on the screen."""
-        print("not overwritten render")
+        raise NotImplementedError("Not overwritten render method!")
 
     def switch_scene(self, next_scene):
         """Change scene."""

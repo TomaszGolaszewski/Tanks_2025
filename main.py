@@ -24,4 +24,4 @@ from game_engine.scenes import run_game
 
 
 if __name__ == "__main__":
-    run_game(TitleScene, WIN_WIDTH, WIN_HEIGHT, FRAMERATE, "Trains 2025", os.path.join(*ICON_PATH))
+    run_game(TitleScene, WIN_WIDTH, WIN_HEIGHT, FRAMERATE, "Tanks 2025", os.path.join(*ICON_PATH))
