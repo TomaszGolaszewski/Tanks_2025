@@ -10,9 +10,9 @@ from classes_scenes_game import *
 
 
 class TitleScene(SceneBase):
-    def __init__(self):
+    def __init__(self, kw={}):
         """Initialization of the scene."""
-        SceneBase.__init__(self)
+        SceneBase.__init__(self, kw)
         offset = 30
         self.title = FixText((WIN_WIDTH/2, WIN_HEIGHT/2 - 30 - offset), "TANKS 2025", 70)
         self.subtitle = FixText((WIN_WIDTH/2, WIN_HEIGHT/2 + 20 - offset), "New beginning", 40)
@@ -55,7 +55,8 @@ class TitleScene(SceneBase):
                         if button.option == "exit":
                             self.terminate()
                         else:
-                            self.switch_scene(BrowseMapsScene({"game_mode": button.option}))
+                            self.kw.update({"game_mode": button.option})
+                            self.switch_scene(BrowseMapsScene(self.kw))
                   
     def update(self):
         """Game logic for the scene."""
@@ -88,19 +89,127 @@ class TitleScene(SceneBase):
 # ======================================================================
 
 
+# class LoadingScene(SceneBase):
+#     def __init__(self, kw):
+#         """Initialization of the scene."""
+#         SceneBase.__init__(self, kw)
+#         self.loading_text = FixText((WIN_WIDTH/2, WIN_HEIGHT/2), "Loading ...", 30)
+#         self.ticks = 0
+
+#     # def process_input(self, events, keys_pressed):
+#     #     """
+#     #     Receive all the events that happened since the last frame.
+#     #     Handle all received events.
+#     #     """
+#     #     pass
+
+#     def update(self):
+#         """Game logic for the scene."""
+#         self.ticks += 1
+#         # automatically jump to the GameScene after the first cycle
+#         if self.ticks > 1:
+#             self.switch_scene(GameScene(self.kw))
+    
+#     def render(self, win):
+#         """Draw scene on the screen."""
+#         # clear screen
+#         win.fill(BLACK)
+#         # print loading text
+#         self.loading_text.draw(win)
+
+
+# ======================================================================
+
+
+class BrowseMapsScene(SceneBase):
+    def __init__(self, kw={}):
+        """Initialization of the scene."""
+        SceneBase.__init__(self, kw)
+        self.title = FixText((WIN_WIDTH/2, 60), "Choose map", 50)
+        self.start_button = AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT - 75), "[ Next >> ]", 30, color=LIME, color_hover=LIME)
+        self.prev_map = AdvancedButton((250, WIN_HEIGHT - 75), "[ < Prev Map ]", 30, color=GRAY)
+        self.next_map = AdvancedButton((WIN_WIDTH - 250, WIN_HEIGHT - 75), "[ Next Map > ]", 30, color=GRAY)
+
+        try:
+            self.list_with_files = os.listdir("maps")
+        except FileNotFoundError:
+            self.list_with_files = []
+        self.current_map_file = self.list_with_files[0]
+        self.current_map_no = 0
+        self.kw.update({"map_file": self.current_map_file})
+        self.map = Map(os.path.join("maps", self.current_map_file), preview_only=True)
+
+    def process_input(self, events, keys_pressed):
+        """
+        Receive all the events that happened since the last frame.
+        Handle all received events.
+        """
+        for event in events:
+            # keys that can be pressed only ones
+            if event.type == pygame.KEYDOWN:
+                # move to the next scene
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    self.switch_scene(LoadingScene(self.kw))
+
+                # TODO: add keyboard operation
+
+            # mouse button down
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button in [1,2,3]: # 1 - left; 2 - middle; 3 - right click
+                mouse_coord = pygame.mouse.get_pos()
+                # move to the next scene
+                if self.start_button.is_inside(mouse_coord):
+                    self.switch_scene(LoadingScene(self.kw))
+                # choose map
+                if self.prev_map.is_inside(mouse_coord) or self.next_map.is_inside(mouse_coord):
+                    if self.prev_map.is_inside(mouse_coord):
+                        self.current_map_no -= 1
+                        if self.current_map_no < 0:
+                            self.current_map_no = len(self.list_with_files)-1
+                    elif self.next_map.is_inside(mouse_coord):
+                        self.current_map_no += 1
+                        if self.current_map_no >= len(self.list_with_files):
+                            self.current_map_no = 0
+                    self.current_map_file = self.list_with_files[self.current_map_no]
+                    self.kw.update({"map_file": self.current_map_file})
+                    self.map = Map(os.path.join("maps", self.current_map_file), preview_only=True)
+
+    def update(self):
+        """Game logic for the scene."""
+        # check hovering of the mouse
+        mouse_coord = pygame.mouse.get_pos()
+        self.start_button.check_hovering(mouse_coord)
+        self.prev_map.check_hovering(mouse_coord)
+        self.next_map.check_hovering(mouse_coord)
+    
+    def render(self, win):
+        """Draw scene on the screen."""
+        # clear screen
+        win.fill(BLACK)
+        # print titles and buttons
+        self.title.draw(win)
+        self.start_button.draw(win)
+        self.prev_map.draw(win)
+        self.next_map.draw(win)
+        # draw the map
+        self.map.draw_preview_by_center(win, (WIN_WIDTH/2, WIN_HEIGHT/2))
+
+
+# ======================================================================
+
+
 class LoadingScene(SceneBase):
-    def __init__(self, kw):
+    def __init__(self, kw={}):
         """Initialization of the scene."""
         SceneBase.__init__(self, kw)
         self.loading_text = FixText((WIN_WIDTH/2, WIN_HEIGHT/2), "Loading ...", 30)
         self.ticks = 0
 
-    # def process_input(self, events, keys_pressed):
-    #     """
-    #     Receive all the events that happened since the last frame.
-    #     Handle all received events.
-    #     """
-    #     pass
+    def process_input(self, events, keys_pressed):
+        """
+        Receive all the events that happened since the last frame.
+        Handle all received events.
+        """
+        pass
 
     def update(self):
         """Game logic for the scene."""
@@ -120,44 +229,8 @@ class LoadingScene(SceneBase):
 # ======================================================================
 
 
-class BrowseMapsScene(SceneBase):
-    def __init__(self, kw):
-        """Initialization of the scene."""
-        SceneBase.__init__(self, kw)
-        self.map = Map(os.path.join("maps", "Testowa_v21.txt"))
-        # self.loading_text = FixText((WIN_WIDTH/2, WIN_HEIGHT/2), "Loading ...", 30)
-        # self.ticks = 0
-
-    def process_input(self, events, keys_pressed):
-        """
-        Receive all the events that happened since the last frame.
-        Handle all received events.
-        """
-        pass
-        
-    def update(self):
-        """Game logic for the scene."""
-        pass
-        # self.ticks += 1
-        # # automatically jump to the GameScene after the first cycle
-        # if self.ticks > 1:
-        #     self.switch_scene(GameScene(self.kw))
-    
-    def render(self, win):
-        """Draw scene on the screen."""
-        pass
-        # clear screen
-        win.fill(BLACK)
-        # draw
-        self.map.draw(win)
-        self.map.draw_preview(win)
-
-
-# ======================================================================
-
-
 class TemplateScene(SceneBase):
-    def __init__(self, kw):
+    def __init__(self, kw={}):
         """Initialization of the scene."""
         SceneBase.__init__(self, kw)
     

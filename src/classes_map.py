@@ -98,17 +98,32 @@ class Tile:
         surface.blit(self.sprite_base, (self.coord_id[0] * TILE_EDGE_LENGTH, self.coord_id[1] * TILE_EDGE_LENGTH))
 
 
-class FlatTerrain(Tile):
-    minimap_color = LIME
-    sprite_coord = (0, 0)
+class Grass(Tile):
+    minimap_color = GRASS
+    sprite_coord = (0, 4)
 
-class Snow(FlatTerrain):
+class Snow(Grass):
     minimap_color = WHITE
     sprite_coord = (0, 3)
 
-class Grass(FlatTerrain):
+
+class Wall(Tile):
+    minimap_color = DARKSTEELGRAY
+    sprite_coord = (3, 0)
+
+class Tree(Wall):
     minimap_color = GREEN
-    sprite_coord = (0, 4)
+    sprite_coord = (4, 4)
+
+class SnowTree(Tree):
+    minimap_color = HOTPINK
+    sprite_coord = (4, 3)
+
+
+class Water(Tile):
+    minimap_color = BLUE
+    sprite_coord = (4, 2)
+
 
 class Void(Tile):
     minimap_color = RED
@@ -148,7 +163,7 @@ TILE_DICT = {
     28: Tile,
     29: Tile,
 
-    30: Tile,
+    30: Wall,
     31: Tile,
     32: Tile,
     33: Tile,
@@ -161,9 +176,9 @@ TILE_DICT = {
 
     40: Tile,
     41: Tile,
-    42: Tile,
-    43: Tile,
-    44: Tile,
+    42: Water,
+    43: SnowTree,
+    44: Tree,
     45: Tile,
     46: Tile,
     47: Tile,
@@ -177,7 +192,7 @@ TILE_DICT = {
 
 
 class Map:
-    def __init__(self, path_to_file): #, tile_edge_length=60):
+    def __init__(self, path_to_file, preview_only=False):
         """Initialization of the map."""
         self.path_to_file = path_to_file
         self.map_tile_ids_array = []
@@ -189,9 +204,9 @@ class Map:
         except FileNotFoundError:
             raise FileNotFoundError("NO FILE!")
         
-        print(a)
-        print(b)
-        print(c)
+        # print(a)
+        # print(b)
+        # print(c)
         self.row_length = 0
         for line in read_map_structure:
             row = line.replace("\t\n", "").split('\t')
@@ -203,12 +218,21 @@ class Map:
         self.column_length = len(self.map_tile_ids_array)
 
         self.preview_map = self.create_preview_map(self.map_tile_ids_array, 5)
-        self.map_tile_obj_array = self.create_tiles_array(self.map_tile_ids_array)
-        self.base_surface = self.create_sprites_map(self.map_tile_obj_array)
 
-    def draw_preview(self, win):#, offset_x: int, offset_y: int, scale):
-        """Draw the preview Map on the screen."""
-        win.blit(self.preview_map, (10, 5))
+        if not preview_only: # do not create a whole map if we only need a preview
+            self.map_tile_obj_array = self.create_tiles_array(self.map_tile_ids_array)
+            self.base_surface = self.create_sprites_map(self.map_tile_obj_array)
+
+    def draw_preview(self, win, coord):
+        """Draw the preview Map on the screen.
+        The anchor point is the upper left corner."""
+        win.blit(self.preview_map, coord)
+
+    def draw_preview_by_center(self, win, center_coord):
+        """Draw the preview Map on the screen.
+        The anchor point is the map center point."""
+        new_rect = self.preview_map.get_rect(center = center_coord)
+        win.blit(self.preview_map, new_rect.topleft)
 
     def draw(self, win):#, offset_x: int, offset_y: int, scale):
         """Draw the Map on the screen."""

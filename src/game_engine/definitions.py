@@ -27,3 +27,5 @@ SHALLOW = (140, 240, 255)
 WATER = (0, 100, 200)
 SAND = (235, 200, 145)
 GRASS = (0, 155, 25)
+
+DARKGREEN = (53, 94, 59) # Hunter Green
