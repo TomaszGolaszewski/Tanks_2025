@@ -9,65 +9,13 @@ from game_engine.definitions import *
 from game_engine.functions_math import *
 
 
-# TILE_DICT = {
-#     0: SILVER,
-#     1: SILVER,
-#     2: SILVER,
-#     3: WHITE, # snow
-#     4: GREEN,
-#     5: SILVER,
-#     6: BLUE,
-#     7: RED,
-#     8: GREEN,
-#     9: YELLOW,
-
-#     10: GRAY,
-#     11: GRAY,
-#     12: GRAY,
-#     13: WHITE, # snow
-#     14: GREEN,
-#     15: SILVER,
-#     16: BLUE,
-#     17: RED,
-#     18: GREEN,
-#     19: YELLOW,
-
-#     25: SILVER,
-#     26: BLUE,
-#     27: RED,
-#     28: GREEN,
-#     29: YELLOW,
-
-#     30: DARKSTEELGRAY,
-#     31: SILVER,
-#     32: GRAY,
-#     33: WHITE, # snow
-#     34: GREEN,
-#     35: ORANGE, # lava
-#     36: BLUE,
-#     37: RED,
-#     38: GREEN,
-#     39: YELLOW,
-
-#     42: BLUE, # water
-#     43: WHITE, # snow tree
-#     44: GREEN,
-#     45: GRAY,
-#     46: BLUE,
-#     47: RED,
-#     48: GREEN,
-#     49: YELLOW,
-
-#     110: RED, # old map border 
-# }
-
-
 class Tile:
     minimap_color = HOTPINK
-    sprite_coord = (0, 0)
+    sprite_coord = (15, 5) # coord of tile on texture pack
 
     def __init__(self, coord_id):
         """Initialization of the tile."""
+        self.sprite_id = 10 * self.sprite_coord[1] + self.sprite_coord[0]
         self.coord_id = coord_id
         self.sprite_base = self.load_and_cut_sprite(os.path.join(*MAP_SPRITES_BASE_PATH))
 
@@ -76,7 +24,10 @@ class Tile:
         Change use_alpha to True for transparent sprites.
         """
         # load and prepare sprite sheet
-        sprite_sheet = pygame.image.load(path)
+        try:
+            sprite_sheet = pygame.image.load(path)
+        except FileNotFoundError:
+            raise FileNotFoundError("NO TEXTURE PACK FILE!")
         # sprite_sheet.convert()
 
         # crop image
@@ -100,38 +51,89 @@ class Tile:
 
 class Grass(Tile):
     minimap_color = GRASS
-    sprite_coord = (0, 4)
+    sprite_coord = (0, 3)
 
 class Snow(Grass):
     minimap_color = WHITE
-    sprite_coord = (0, 3)
+    sprite_coord = (0, 2)
+
+
+class Pavement(Grass):
+    minimap_color = SILVER
+    sprite_coord = (0, 0)
+
+class TGPavement(Pavement):
+    minimap_color = SILVER
+    sprite_coord = (2, 0)
+
+class Asphalt(Pavement):
+    minimap_color = GRAY
+    sprite_coord = (0, 1)
+
+class AsphaltLineV(Pavement):
+    minimap_color = GRAY
+    sprite_coord = (2, 1)
+
+class AsphaltLineH(Pavement):
+    minimap_color = GRAY
+    sprite_coord = (3, 1)
+
+class AsphaltCrossingV(Pavement):
+    minimap_color = GRAY
+    sprite_coord = (4, 1)
+
+class AsphaltCrossingH(Pavement):
+    minimap_color = GRAY
+    sprite_coord = (5, 1)
 
 
 class Wall(Tile):
     minimap_color = DARKSTEELGRAY
-    sprite_coord = (3, 0)
+    sprite_coord = (5, 0)
 
 class Tree(Wall):
     minimap_color = GREEN
-    sprite_coord = (4, 4)
+    sprite_coord = (2, 3)
 
 class SnowTree(Tree):
     minimap_color = HOTPINK
-    sprite_coord = (4, 3)
+    sprite_coord = (2, 2)
+
+
+class BarrelPavement(Wall):
+    minimap_color = BROWN
+    sprite_coord = (1, 0)
+
+class BarrelAsphalt(BarrelPavement):
+    minimap_color = BROWN
+    sprite_coord = (1, 1)
+
+class BarrelSnow(BarrelPavement):
+    minimap_color = BROWN
+    sprite_coord = (1, 2)
+
+class BarrelGrass(BarrelPavement):
+    minimap_color = BROWN
+    sprite_coord = (1, 3)
+
+class Lava(BarrelPavement):
+    minimap_color = ORANGE
+    sprite_coord = (1, 5)
 
 
 class Water(Tile):
     minimap_color = BLUE
-    sprite_coord = (4, 2)
+    sprite_coord = (0, 5)
 
 
 class Void(Tile):
     minimap_color = RED
-    sprite_coord = (11, 0)
+    sprite_coord = (12, 5)
+
 
 TILE_DICT = {
-    0: Tile,
-    1: Tile,
+    0: Pavement,
+    1: TGPavement,
     2: Tile,
     3: Snow,
     4: Grass,
@@ -141,9 +143,9 @@ TILE_DICT = {
     8: Tile,
     9: Tile,
 
-    10: Tile,
-    11: Tile,
-    12: Tile,
+    10: Asphalt,
+    11: AsphaltLineV,
+    12: AsphaltLineH,
     13: Tile,
     14: Tile,
     15: Tile,
@@ -164,11 +166,11 @@ TILE_DICT = {
     29: Tile,
 
     30: Wall,
-    31: Tile,
-    32: Tile,
-    33: Tile,
-    34: Tile,
-    35: Tile,
+    31: BarrelPavement,
+    32: BarrelAsphalt,
+    33: BarrelSnow,
+    34: BarrelGrass,
+    35: Lava,
     36: Tile,
     37: Tile,
     38: Tile,
@@ -202,7 +204,7 @@ class Map:
                 a, b, c = file.readline().split('\t')
                 read_map_structure = file.readlines()
         except FileNotFoundError:
-            raise FileNotFoundError("NO FILE!")
+            raise FileNotFoundError("NO MAP FILE!")
         
         # print(a)
         # print(b)

@@ -7,6 +7,7 @@ from game_engine.scenes_features import *
 from classes_map import *
 # from classes_trains import *
 from classes_scenes_game import *
+from classes_scenes_editor import *
 
 
 class TitleScene(SceneBase):
@@ -22,8 +23,9 @@ class TitleScene(SceneBase):
             AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 200 - offset), "[Classic Cooperation]", 30, color=GRAY, option="coop"),
             AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 250 - offset), "[Zombie Mode]", 30, color=GRAY, option="zombie"),
             AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 300 - offset), "[RTS Mode]", 30, color=GRAY, option="rts"),
-            AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 350 - offset), "[Settings]", 30, color=GRAY, option="settings"),
-            AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 400 - offset), "[Exit]", 30, color=GRAY, option="exit"),
+            AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 350 - offset), "[Editor]", 30, color=GRAY, option="editor"),
+            AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 400 - offset), "[Settings]", 30, color=GRAY, option="settings"),
+            AdvancedButton((WIN_WIDTH/2, WIN_HEIGHT/2 + 450 - offset), "[Exit]", 30, color=GRAY, option="exit"),
         ]
         self.seconds_since_start = 0
         self.current_frame = 0
@@ -216,7 +218,11 @@ class LoadingScene(SceneBase):
         self.ticks += 1
         # automatically jump to the GameScene after the first cycle
         if self.ticks > 1:
-            self.switch_scene(GameScene(self.kw))
+            game_mode = self.kw.get("game_mode", "quick")
+            if game_mode == "editor":
+                self.switch_scene(EditorScene(self.kw))
+            else:
+                self.switch_scene(GameScene(self.kw))
     
     def render(self, win):
         """Draw scene on the screen."""

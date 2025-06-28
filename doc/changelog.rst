@@ -2,6 +2,11 @@ Changelog
 ======
 
 
+v0.2.2 - 28.06.2025
+------
+* Added new sprites templates;
+* Preparing to add a map editor.
+
 v0.2.1 - 19.06.2025
 ------
 * Added Browse Maps Scene.
