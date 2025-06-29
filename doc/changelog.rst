@@ -2,6 +2,11 @@ Changelog
 ======
 
 
+v0.2.3 - 29.06.2025
+------
+* More preparing to add a map editor;
+* Added ne method to draw map on screen.
+
 v0.2.2 - 28.06.2025
 ------
 * Added new sprites templates;

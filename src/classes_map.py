@@ -224,6 +224,8 @@ class Map:
         if not preview_only: # do not create a whole map if we only need a preview
             self.map_tile_obj_array = self.create_tiles_array(self.map_tile_ids_array)
             self.base_surface = self.create_sprites_map(self.map_tile_obj_array)
+            self.base_surface_width = self.base_surface.get_width()
+            self.base_surface_height = self.base_surface.get_height()
 
     def draw_preview(self, win, coord):
         """Draw the preview Map on the screen.
@@ -236,9 +238,14 @@ class Map:
         new_rect = self.preview_map.get_rect(center = center_coord)
         win.blit(self.preview_map, new_rect.topleft)
 
-    def draw(self, win):#, offset_x: int, offset_y: int, scale):
+    def draw(self, win, offset_x: int, offset_y: int, scale, screen_pos_x=0, screen_pos_y=0, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT):
         """Draw the Map on the screen."""
-        win.blit(self.base_surface, (100, 50))
+        # win.blit(self.base_surface, (screen_pos_x, screen_pos_y), (- offset_x * scale, - offset_y * scale, screen_width, screen_height))
+        # TODO: kopiuj wycikek w odpowiednim rozmiarze > przeskaluj i dopiero wyświetl na ekranie
+        # try: pygame.Surface.subsurface
+        # subsurface=pygame.Surface.subsurface(self.base_surface, ( (x,y), (w, h) ))
+        scaled_image = pygame.transform.scale(self.base_surface, (int(scale * self.base_surface_width), int(scale * self.base_surface_height)))
+        win.blit(scaled_image, world2screen((screen_pos_x, screen_pos_y), offset_x, offset_y, scale))
 
     def create_preview_map(self, map_str_array: list[list], pixel_size: int):
         """Create canvas with preview map."""
@@ -269,22 +276,10 @@ class Map:
         return canvas
 
 
-    # def draw(self, win, offset_x: int, offset_y: int, scale):
-    #     """Draw the Map on the screen."""
-    #     pass
-        # for tile_id in self.dict_with_tiles:
-        #     tile = self.dict_with_tiles[tile_id]
-        #     tile.draw(win, offset_x, offset_y, scale)
 
     # def draw_grid(self, win, offset_x: int, offset_y: int, scale):
     #     """Draw grid of the Map on the screen."""
     #     pass
-        # tile_top_left_coord_id = self.world2id(screen2world((0, 0), offset_x, offset_y, scale))
-        # tile_bottom_right_coord_id = self.world2id(screen2world((WIN_WIDTH, WIN_HEIGHT), offset_x, offset_y, scale))
-        # for x_id in range(tile_top_left_coord_id[0], tile_bottom_right_coord_id[0] + 1):
-        #     for y_id in range(tile_top_left_coord_id[1], tile_bottom_right_coord_id[1] + 1):
-        #         coord_screen = world2screen(self.id2world((x_id, y_id)), offset_x, offset_y, scale) 
-        #         pygame.draw.circle(win, WHITE, coord_screen, 10*scale, 1)
 
     # def id2world(self, coord_id: tuple[int, int]) -> tuple[float, float]:
     #     """Calculate coordinates from tile's id to world coordinate system.
