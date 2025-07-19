@@ -219,7 +219,11 @@ class LoadingScene(SceneBase):
         # automatically jump to the GameScene after the first cycle
         if self.ticks > 1:
             game_mode = self.kw.get("game_mode", "quick")
-            if game_mode == "editor":
+            if game_mode == "one":
+                self.switch_scene(GameScene(self.kw))
+            elif game_mode == "coop":
+                self.switch_scene(Game2PlayersScene(self.kw))
+            elif game_mode == "editor":
                 self.switch_scene(EditorScene(self.kw))
             else:
                 self.switch_scene(GameScene(self.kw))

@@ -232,10 +232,27 @@ class Map:
         The anchor point is the upper left corner."""
         win.blit(self.preview_map, coord)
 
+    # get_rect() anchor points:
+    # topleft, bottomleft, topright, bottomright
+    # midtop, midleft, midbottom, midright
+    # center, centerx, centery
+
     def draw_preview_by_center(self, win, center_coord):
         """Draw the preview Map on the screen.
         The anchor point is the map center point."""
         new_rect = self.preview_map.get_rect(center = center_coord)
+        win.blit(self.preview_map, new_rect.topleft)
+
+    def draw_preview_by_midtop(self, win, midtop_coord):
+        """Draw the preview Map on the screen.
+        The anchor point is the map midtop point."""
+        new_rect = self.preview_map.get_rect(midtop = midtop_coord)
+        win.blit(self.preview_map, new_rect.topleft)
+
+    def draw_preview_by_topright(self, win, topright_coord):
+        """Draw the preview Map on the screen.
+        The anchor point is the map topright point."""
+        new_rect = self.preview_map.get_rect(topright = topright_coord)
         win.blit(self.preview_map, new_rect.topleft)
 
     def draw(self, win, offset_x: int, offset_y: int, scale, screen_pos_x=0, screen_pos_y=0, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT):
@@ -246,6 +263,10 @@ class Map:
         # subsurface=pygame.Surface.subsurface(self.base_surface, ( (x,y), (w, h) ))
         scaled_image = pygame.transform.scale(self.base_surface, (int(scale * self.base_surface_width), int(scale * self.base_surface_height)))
         win.blit(scaled_image, world2screen((screen_pos_x, screen_pos_y), offset_x, offset_y, scale))
+
+    def draw_cropped_map(self, win, offset_x: int, offset_y: int, screen_pos_x=0, screen_pos_y=0, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT):
+        """Draw cropped Map on the screen."""
+        win.blit(self.base_surface, (screen_pos_x, screen_pos_y), (- offset_x, - offset_y, screen_width, screen_height))
 
     def create_preview_map(self, map_str_array: list[list], pixel_size: int):
         """Create canvas with preview map."""
