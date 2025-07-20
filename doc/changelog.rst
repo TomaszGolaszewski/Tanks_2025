@@ -2,6 +2,10 @@ Changelog
 ======
 
 
+v0.2.5 - 20.07.2025
+------
+* Map loading optimization.
+
 v0.2.4 - 19.07.2025
 ------
 * Added new methods to draw map on screen for Game Scenes.

@@ -13,26 +13,21 @@ class Tile:
     minimap_color = HOTPINK
     sprite_coord = (15, 5) # coord of tile on texture pack
 
-    def __init__(self, coord_id):
+    def __init__(self, coord_id, sprite_sheet_base=None):
         """Initialization of the tile."""
         self.sprite_id = 10 * self.sprite_coord[1] + self.sprite_coord[0]
         self.coord_id = coord_id
-        self.sprite_base = self.load_and_cut_sprite(os.path.join(*MAP_SPRITES_BASE_PATH))
+        self.sprite_base = self.load_and_cut_sprite(sprite_sheet_base)
 
-    def load_and_cut_sprite(self, path, use_alpha=False):
+    def load_and_cut_sprite(self, sprite_sheet, use_alpha=False):
         """Load and crop sprite from sprite table.
         Change use_alpha to True for transparent sprites.
         """
-        # load and prepare sprite sheet
-        try:
-            sprite_sheet = pygame.image.load(path)
-        except FileNotFoundError:
-            raise FileNotFoundError("NO TEXTURE PACK FILE!")
-        # sprite_sheet.convert()
-
         # crop image
         image = pygame.Surface((TILE_EDGE_LENGTH, TILE_EDGE_LENGTH))
         image.blit(sprite_sheet, (0, 0), (self.sprite_coord[0] * TILE_EDGE_LENGTH, self.sprite_coord[1] * TILE_EDGE_LENGTH, TILE_EDGE_LENGTH, TILE_EDGE_LENGTH))
+
+        # TODO: solve alpha
 
         # if use_alpha:
         #     image_alpha = pygame.Surface.convert_alpha(image)
@@ -190,6 +185,7 @@ TILE_DICT = {
     110: Void,
 }
 
+
 # ======================================================================
 
 
@@ -280,10 +276,11 @@ class Map:
     def create_tiles_array(self, map_str_array: list[list]):
         """Create array with map tiles objects."""
         map_tiles_array = []
+        sprite_sheet_base = self.load_sprite_sheet(os.path.join(*MAP_SPRITES_BASE_PATH))
         for y, str_row in enumerate(map_str_array):
             tile_row = []
             for x, tile in enumerate(str_row):
-                tile_row.append(TILE_DICT[int(tile)]((x, y)))
+                tile_row.append(TILE_DICT[int(tile)]((x, y), sprite_sheet_base))
             map_tiles_array.append(tile_row)
         return map_tiles_array
 
@@ -296,6 +293,28 @@ class Map:
                 tile.draw_base(canvas)
         return canvas
 
+    def load_sprite_sheet(self, path, use_alpha=False):
+        """Load sprite sheet from sprite table.
+        Change use_alpha to True for transparent sprites.
+        """
+        try:
+            sprite_sheet = pygame.image.load(path)
+        except FileNotFoundError:
+            raise FileNotFoundError("NO TEXTURE PACK FILE!")
+        # sprite_sheet.convert()
+
+        # TODO: solve alpha
+        
+        # if use_alpha:
+        #     image_alpha = pygame.Surface.convert_alpha(image)
+		#     image_alpha.set_colorkey(HOTPINK)
+        #     return image_alpha
+        # else:
+        #     return image 
+        # # image.convert()
+        # image.set_colorkey(HOTPINK) # for transparency
+
+        return sprite_sheet
 
 
     # def draw_grid(self, win, offset_x: int, offset_y: int, scale):
