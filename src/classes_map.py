@@ -253,12 +253,16 @@ class Map:
 
     def draw(self, win, offset_x: int, offset_y: int, scale, screen_pos_x=0, screen_pos_y=0, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT):
         """Draw the Map on the screen."""
-        # win.blit(self.base_surface, (screen_pos_x, screen_pos_y), (- offset_x * scale, - offset_y * scale, screen_width, screen_height))
-        # TODO: kopiuj wycikek w odpowiednim rozmiarze > przeskaluj i dopiero wyświetl na ekranie
-        # try: pygame.Surface.subsurface
-        # subsurface=pygame.Surface.subsurface(self.base_surface, ( (x,y), (w, h) ))
-        scaled_image = pygame.transform.scale(self.base_surface, (int(scale * self.base_surface_width), int(scale * self.base_surface_height)))
-        win.blit(scaled_image, world2screen((screen_pos_x, screen_pos_y), offset_x, offset_y, scale))
+        if scale >= 0.5:
+            cropped_original_image = pygame.Surface((screen_width // scale, screen_height // scale))
+            cropped_original_image.blit(self.base_surface, (offset_x, offset_y))
+            scaled_image = pygame.transform.scale(cropped_original_image, (screen_width, screen_height))
+            win.blit(scaled_image, (screen_pos_x, screen_pos_y))
+        else:
+            buffer_surface = pygame.Surface((screen_width, screen_height))
+            scaled_image = pygame.transform.scale(self.base_surface, (int(scale * self.base_surface_width), int(scale * self.base_surface_height)))
+            buffer_surface.blit(scaled_image, (offset_x*scale, offset_y*scale))
+            win.blit(buffer_surface, (screen_pos_x, screen_pos_y))
 
     def draw_cropped_map(self, win, offset_x: int, offset_y: int, screen_pos_x=0, screen_pos_y=0, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT):
         """Draw cropped Map on the screen."""

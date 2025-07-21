@@ -11,6 +11,10 @@ Tank shooting game with terrain destruction.
 v0.2 - Map stage I
 
 ### Last changes:
+v0.2.6 - 21.07.2025
+
+* Map display optimization.
+
 v0.2.5 - 20.07.2025
 
 * Map loading optimization.

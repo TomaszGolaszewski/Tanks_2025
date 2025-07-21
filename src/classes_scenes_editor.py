@@ -13,6 +13,7 @@ class EditorScene(SceneBase):
         SceneBase.__init__(self, kw)
         self.map = Map(os.path.join("maps", self.kw.get("map_file")))
         # display variables
+        self.margin_top = 50
         self.scale = 0.5
         self.offset_horizontal, self.offset_vertical = 0, 0
 
@@ -27,7 +28,10 @@ class EditorScene(SceneBase):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # 1 - left click
                 if event.button == 1:
-                    pass
+                    # TODO: for test, to remove
+                    mouse_pos = pygame.mouse.get_pos()
+                    world_test = screen2world((mouse_pos[0], mouse_pos[1]-self.margin_top), self.offset_horizontal, self.offset_vertical, self.scale)
+                    print(self.scale, world_test[0] // TILE_EDGE_LENGTH, world_test[1] // TILE_EDGE_LENGTH)
 
                 # 3 - right click
                 if event.button == 3:
@@ -44,7 +48,7 @@ class EditorScene(SceneBase):
                     # define new view center
                     mouse_pos = pygame.mouse.get_pos()
                     self.offset_horizontal -= (mouse_pos[0] - WIN_WIDTH/2) / self.scale
-                    self.offset_vertical -= (mouse_pos[1] - WIN_HEIGHT/2) / self.scale
+                    self.offset_vertical -= (mouse_pos[1]-self.margin_top - WIN_HEIGHT/2) / self.scale
 
                 # 3 - right click
                 if event.button == 3:
@@ -56,9 +60,7 @@ class EditorScene(SceneBase):
                     # mouse_pos = pygame.mouse.get_pos()
 
                     self.scale *= 2
-                    # if self.scale >= 4: self.scale = 4
                     if self.scale >= 1: self.scale = 1
-                    print(self.scale)
 
                     if old_scale - self.scale:
                         # OFFSET_HORIZONTAL -= mouse_pos[0] / old_scale - WIN_WIDTH/2 / SCALE
@@ -72,9 +74,7 @@ class EditorScene(SceneBase):
                     # mouse_pos = pygame.mouse.get_pos()
 
                     self.scale /= 2
-                    # if SCALE <= 0.25: SCALE = 0.25
                     if self.scale <= 0.125: self.scale = 0.125
-                    print(self.scale)
 
                     if old_scale - self.scale:
                         # OFFSET_HORIZONTAL -= mouse_pos[0] / old_scale - WIN_WIDTH/2 / SCALE
@@ -115,9 +115,8 @@ class EditorScene(SceneBase):
         # clear screen
         win.fill(BLACK)
         # draw the map
-        # self.map.draw(win, self.offset_horizontal, self.offset_vertical, self.scale)
         self.map.draw(win, self.offset_horizontal, self.offset_vertical, self.scale, \
-                            screen_pos_x=100, screen_pos_y=100, screen_width=WIN_WIDTH//2, screen_height=WIN_HEIGHT//2)
+                            screen_pos_x=0, screen_pos_y=self.margin_top, screen_width=WIN_WIDTH, screen_height=WIN_HEIGHT)
 
 
 # ======================================================================
