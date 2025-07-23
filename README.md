@@ -8,9 +8,13 @@ Tank shooting game with terrain destruction.
 ## About
 
 ### Current stage:
-v0.2 - Map stage I
+v0.3 - Units stage I
 
 ### Last changes:
+v0.3.0 - 23.07.2025
+
+* Uploading new classes to the game engine responsible for unit animation.
+
 v0.2.6 - 21.07.2025
 
 * Map display optimization.

@@ -7,3 +7,4 @@ from . import definitions
 from . import functions_math
 from . import scenes
 from . import scenes_features
+from . import objects_sprite_based

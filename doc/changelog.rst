@@ -2,6 +2,14 @@ Changelog
 ======
 
 
+v0.3.0 - 23.07.2025
+------
+* Uploading new classes to the game engine responsible for unit animation.
+
+v0.3 - Units stage I
+======
+
+
 v0.2.6 - 21.07.2025
 ------
 * Map display optimization.
