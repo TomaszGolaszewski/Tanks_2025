@@ -4,7 +4,7 @@ from settings import *
 from game_engine.scenes import *
 from game_engine.scenes_features import *
 from classes_map import *
-# from classes_trains import *
+from classes_units import *
 
 
 class GameScene(SceneBase):

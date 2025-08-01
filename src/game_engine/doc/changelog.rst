@@ -1,6 +1,10 @@
 Game Engine Changelog
 ======
 
+v1.1.1 - 01.08.2025
+------
+* Files renamed.
+
 v1.1.0 - 23.07.2025
 ------
 * Added new classes: Base_object and Base_animated_object.
