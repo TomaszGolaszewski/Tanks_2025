@@ -1,6 +1,10 @@
 Changelog
 ======
 
+v0.3.2 - 02.08.2025
+------
+* Player control mechanism was connected to new Unit class.
+
 v0.3.1 - 01.08.2025
 ------
 * Added new Unit class.

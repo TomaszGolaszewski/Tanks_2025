@@ -11,6 +11,14 @@ Tank shooting game with terrain destruction.
 v0.3 - Units stage I
 
 ### Last changes:
+v0.3.2 - 02.08.2025
+
+* Player control mechanism was connected to new Unit class.
+
+v0.3.1 - 01.08.2025
+
+* Added new Unit class.
+
 v0.3.0 - 23.07.2025
 
 * Uploading new classes to the game engine responsible for unit animation.
@@ -19,21 +27,7 @@ v0.2.6 - 21.07.2025
 
 * Map display optimization.
 
-v0.2.5 - 20.07.2025
 
-* Map loading optimization.
-
-v0.2.4 - 19.07.2025
-
-* Added new methods to draw map on screen for Game Scenes.
-
-v0.2.3 - 29.06.2025
-
-* More preparing to add a map editor;
-* Added ne method to draw map on screen.
-
-v0.2.2 - 28.06.2025
-
-* Added new sprites templates;
-* Preparing to add a map editor.
+### Game Engine:
+v1.1.1 - 01.08.2025
 
