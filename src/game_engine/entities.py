@@ -25,7 +25,7 @@ class Base_object:
         # load and prepare sprite
         self.sprite = pygame.image.load(os.path.join(*self.path))
         self.sprite.convert()
-        self.sprite.set_colorkey(BLACK)
+        self.sprite.set_colorkey(GLOBAL_ALPHA_CHANNEL)
 
         # calculate frame size
         sprite_rect = self.sprite.get_rect()
@@ -59,6 +59,24 @@ class Base_object:
         """
         self.angle = angle
 
+    def swap_color(self, img, old_color: tuple[int, int, int], new_color: tuple[int, int, int]):
+        """Help tool to change specific sprite color e.g. for team painting.
+        
+        Args:
+            img: Surface with sprite.
+            old_color (tuple[int, int, int]): Old color to be replaced.
+            new_color (tuple[int, int, int]): New color.
+
+        Returns:
+            Surface with new sprite.
+        """
+        img.set_colorkey(old_color)
+        surf = img.copy()
+        surf.fill(new_color)
+        surf.blit(img, (0, 0))
+        surf.set_colorkey(GLOBAL_ALPHA_CHANNEL)
+        return surf
+
 
 # ======================================================================
 
@@ -83,7 +101,7 @@ class Base_animated_object(Base_object):
         # load and prepare sprite sheet
         self.sprite_sheet = pygame.image.load(os.path.join(*self.path))
         self.sprite_sheet.convert()
-        self.sprite_sheet.set_colorkey(BLACK)
+        self.sprite_sheet.set_colorkey(GLOBAL_ALPHA_CHANNEL)
 
         # calculate frame size
         sprite_sheet_rect = self.sprite_sheet.get_rect()

@@ -26,6 +26,7 @@ class GameScene(SceneBase):
         # move
         player_move_x = 0
         player_move_y = 0
+        player_move_turret = 0
         # move left
         if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_a]:
             player_move_x -= 1
@@ -38,12 +39,20 @@ class GameScene(SceneBase):
         # move down
         if keys_pressed[pygame.K_DOWN] or keys_pressed[pygame.K_s]:
             player_move_y += 1
+        # move turret left
+        if keys_pressed[pygame.K_f] or keys_pressed[pygame.K_COMMA]:
+            player_move_turret -= 1
+        # move turret right
+        if keys_pressed[pygame.K_h] or keys_pressed[pygame.K_PERIOD]:
+            player_move_turret += 1
         # move player
-        self.unit_dict[self.player_id].move_manually(player_move_x, player_move_y)
+        self.unit_dict[self.player_id].manually_move_body(player_move_x, player_move_y)
+        self.unit_dict[self.player_id].manually_move_turret(player_move_turret)
 
     def update(self):
         """Game logic for the scene."""
-        pass
+        for unit_id in self.unit_dict:
+            self.unit_dict[unit_id].run()
     
     def render(self, win):
         """Draw scene on the screen."""
@@ -99,6 +108,7 @@ class Game2PlayersScene(GameScene):
         # Player 1
         player_1_move_x = 0
         player_1_move_y = 0
+        player_1_move_turret = 0
         # move left
         if keys_pressed[pygame.K_a]:
             player_1_move_x -= 1
@@ -111,12 +121,20 @@ class Game2PlayersScene(GameScene):
         # move down
         if keys_pressed[pygame.K_s]:
             player_1_move_y += 1
+        # move turret left
+        if keys_pressed[pygame.K_f]:
+            player_1_move_turret -= 1
+        # move turret right
+        if keys_pressed[pygame.K_h]:
+            player_1_move_turret += 1
         # move player 1
-        self.unit_dict[self.player_1_id].move_manually(player_1_move_x, player_1_move_y)
+        self.unit_dict[self.player_1_id].manually_move_body(player_1_move_x, player_1_move_y)
+        self.unit_dict[self.player_1_id].manually_move_turret(player_1_move_turret)
 
         # Player 2
         player_2_move_x = 0
         player_2_move_y = 0
+        player_2_move_turret = 0
         # move left
         if keys_pressed[pygame.K_LEFT]:
             player_2_move_x -= 1
@@ -129,12 +147,19 @@ class Game2PlayersScene(GameScene):
         # move down
         if keys_pressed[pygame.K_DOWN]:
             player_2_move_y += 1
+        # move turret left
+        if keys_pressed[pygame.K_COMMA]:
+            player_2_move_turret -= 1
+        # move turret right
+        if keys_pressed[pygame.K_PERIOD]:
+            player_2_move_turret += 1
         # move player 2
-        self.unit_dict[self.player_2_id].move_manually(player_2_move_x, player_2_move_y)
+        self.unit_dict[self.player_2_id].manually_move_body(player_2_move_x, player_2_move_y)
+        self.unit_dict[self.player_2_id].manually_move_turret(player_2_move_turret)
 
-    def update(self):
-        """Game logic for the scene."""
-        pass
+    # def update(self):
+    #     """Game logic for the scene."""
+    #     pass
     
     def render(self, win):
         """Draw scene on the screen."""

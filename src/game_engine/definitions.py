@@ -30,3 +30,6 @@ GRASS = (0, 155, 25)
 
 DARKGREEN = (53, 94, 59) # Hunter Green
 BROWN = (111, 78, 55) # Coffee
+
+# global alpha channel
+GLOBAL_ALPHA_CHANNEL = BLUE

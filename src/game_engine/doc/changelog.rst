@@ -1,6 +1,10 @@
 Game Engine Changelog
 ======
 
+v1.1.2 - 03.08.2025
+------
+* Added tool to help change color of base objects if necessary.
+
 v1.1.1 - 01.08.2025
 ------
 * Files renamed.

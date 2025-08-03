@@ -1,6 +1,12 @@
 Changelog
 ======
 
+v0.3.3 - 03.08.2025
+------
+* Added new Turret class;
+* Units now have a gun turret;
+* Added player control of the turret.
+
 v0.3.2 - 02.08.2025
 ------
 * Player control mechanism was connected to new Unit class.

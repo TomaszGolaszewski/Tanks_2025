@@ -5,7 +5,12 @@ from game_engine.entities import *
 
 
 class Turret(Base_object):
-    pass
+    path = ["imgs", "units", "turret.bmp"]
+
+    def __init__(self, coord: tuple[float, float], angle: float, team_color: tuple[int, int, int]):
+        Base_object.__init__(self, coord, angle)
+        self.team_color = team_color
+        self.sprite = self.swap_color(self.sprite, LIME, team_color)
 
 class TankBase(Base_animated_object):
     pass
@@ -23,19 +28,22 @@ class Unit:
         self.coord = coord
         self.angle = angle
         self.team = team
+        self.team_color = self.decide_team_color(team)
+
+        # unit objects
+        self.turret = Turret(coord, angle, self.team_color)
 
     def draw(self, surface, offset_x: int, offset_y: int):
         """Draw unit on screen."""
-        if self.team == 1:
-            color = RED
-        elif self.team == 2:
-            color = BLUE
-        else:
-            color = WHITE
-        pygame.draw.circle(surface, color, world2screen(self.coord, offset_x, offset_y), 10)
+        self.turret.draw(surface, offset_x, offset_y)
+        pygame.draw.circle(surface, WHITE, world2screen(self.coord, offset_x, offset_y), 2)
 
-    def move_manually(self, direction_x: int, direction_y: int):
-        """Move unit manually, e.g. by keyboard.
+    def run(self):
+        """Run the basic functioning of the unit."""
+        self.turret.set_position(self.coord)
+
+    def manually_move_body(self, direction_x: int, direction_y: int):
+        """Move unit body manually, e.g. by keyboard.
         The direction of movement corresponds to the axes of the in-game coordinate system:
         * direction_x == 1 -> move right
         * direction_x == -1 -> move left
@@ -45,6 +53,30 @@ class Unit:
         move_speed = 5 
         self.coord = (self.coord[0] + move_speed * direction_x, self.coord[1] + move_speed * direction_y)
 
+    def manually_move_turret(self, direction: int):
+        """Move unit turret manually, e.g. by keyboard.
+        The direction of rotation is clockwise:
+        * direction == 1 -> move right
+        * direction == -1 -> move left
+        """
+        move_speed = 0.03
+        turret_angle = self.turret.get_angle()
+        turret_angle += move_speed * direction
+        if turret_angle > 2*math.pi:
+            turret_angle -= 2*math.pi
+        if turret_angle < 0:
+            turret_angle += 2*math.pi
+        self.turret.set_angle(turret_angle)
+
     def get_position(self) -> tuple[float, float]:
         """Return object's coordinates."""
         return self.coord
+    
+    def decide_team_color(self, team) -> tuple[int, int, int]:
+        """Return team color base on team number."""
+        if team == 1:
+            return RED
+        elif team == 2:
+            return (0, 0, 250) # BLUE
+        else:
+            return WHITE
