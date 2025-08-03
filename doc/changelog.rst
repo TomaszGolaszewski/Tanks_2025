@@ -1,6 +1,11 @@
 Changelog
 ======
 
+v0.3.4 - 03.08.2025
+------
+* Added new TankBase class;
+* Units now have a body.
+
 v0.3.3 - 03.08.2025
 ------
 * Added new Turret class;

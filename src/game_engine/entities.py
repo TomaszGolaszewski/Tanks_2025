@@ -9,7 +9,7 @@ from game_engine.functions_math import *
 
 
 class Base_object:
-    path = ["path_to_sprite", "example.png"]
+    path = ["path_to_sprite", "example.bmp"]
 
     def __init__(self, coord: tuple[float, float], angle: float):
         """Initialization of the object.
@@ -82,7 +82,7 @@ class Base_object:
 
 
 class Base_animated_object(Base_object):
-    path = ["path_to_sprite_sheet", "example.png"]
+    path = ["path_to_sprite_sheet", "example.bmp"]
     number_of_frames = 4
     number_of_states = 3
 
@@ -155,9 +155,10 @@ class Base_animated_object(Base_object):
     def crop_sprite(self, sprite_sheet, no_of_frame: int, no_of_state: int):
         """Function that crops and return one frame from sprite sheet."""
         image = pygame.Surface((self.frame_width, self.frame_height))
+        image.fill(GLOBAL_ALPHA_CHANNEL)
         image.blit(sprite_sheet, (0, 0), (no_of_frame * self.frame_width, no_of_state * self.frame_height, self.frame_width, self.frame_height))
         image.convert()
-        image.set_colorkey(BLACK)
+        image.set_colorkey(GLOBAL_ALPHA_CHANNEL)
         return image
 
     def get_frame_index(self):

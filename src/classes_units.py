@@ -13,7 +13,15 @@ class Turret(Base_object):
         self.sprite = self.swap_color(self.sprite, LIME, team_color)
 
 class TankBase(Base_animated_object):
-    pass
+    path = ["imgs", "units", "tank_body_8.bmp"]
+    number_of_frames = 8
+    number_of_states = 2
+
+    def __init__(self, coord: tuple[float, float], angle: float, team_color: tuple[int, int, int]):
+        Base_animated_object.__init__(self, coord, angle)
+        self.team_color = team_color
+        new_sprite_list = [self.swap_color(sprite, LIME, team_color) for sprite in self.sprite_list]
+        self.sprite_list = new_sprite_list
 
 class Unit:
     def __init__(self, coord: tuple[float, float], angle: float, team: int):
@@ -31,15 +39,18 @@ class Unit:
         self.team_color = self.decide_team_color(team)
 
         # unit objects
+        self.body = TankBase(coord, angle, self.team_color)
         self.turret = Turret(coord, angle, self.team_color)
 
     def draw(self, surface, offset_x: int, offset_y: int):
         """Draw unit on screen."""
+        self.body.draw(surface, offset_x, offset_y)
         self.turret.draw(surface, offset_x, offset_y)
         pygame.draw.circle(surface, WHITE, world2screen(self.coord, offset_x, offset_y), 2)
 
     def run(self):
         """Run the basic functioning of the unit."""
+        self.body.set_position(self.coord)
         self.turret.set_position(self.coord)
 
     def manually_move_body(self, direction_x: int, direction_y: int):
@@ -52,6 +63,12 @@ class Unit:
         """
         move_speed = 5 
         self.coord = (self.coord[0] + move_speed * direction_x, self.coord[1] + move_speed * direction_y)
+
+        # TODO: move to different method
+        if direction_x or direction_y:
+            self.body.state = "move"
+        else:
+            self.body.state = "stop"
 
     def manually_move_turret(self, direction: int):
         """Move unit turret manually, e.g. by keyboard.
